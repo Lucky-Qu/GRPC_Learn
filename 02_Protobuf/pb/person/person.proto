@@ -1,0 +1,53 @@
+//声明协议版本
+syntax = "proto3";
+
+//声明分包名称
+package person;
+
+//设置 “包路径;别名”
+option go_package = "02_Protobuf/pb/person;person";
+
+/*
+引用
+在Java中不可用，因此写在注释里
+import "路径/文件名.proto"
+可以使用其他proto中定义的东西
+*/
+
+//按结构体来理解message,语法与Go相反，先声明类型，再声明变量
+message Person{
+  // =号后面代表唯一标识
+  string name = 1;
+  int32 age = 2;
+  //枚举选择性别(注：枚举必须有一个零值)
+  enum Sex{
+    MALE = 0;
+    FEMALE = 1;
+    OTHER = 2;
+    //当枚举需要两个选项使用一个标识符的时候，设置 allow_alias参数为true即可
+    option allow_alias = true;
+    WOMEN = 1;
+  }
+  //oneof用于声明一个区间，区间内的值只能同时存在一个，给其中的一个赋值会使区间内的其他变量失去值
+  oneof testOneOf{
+    string test_one = 7;
+    string test_two = 8;
+    string test_three = 9;
+  }
+  Sex sex = 3;
+  //声明切片
+  repeated string test = 4;
+  //声明map(第一个参数为key，只允许为string或int，第二个参数为value，无限制类型)
+  map <string,int32>testMap = 10;
+  //保留关键字deathYear(也可以保留唯一标识符)
+  reserved deathYear;
+  reserved 5;
+}
+
+//支持嵌套
+message Home{
+  message Master{
+    string name = 1;
+  }
+  Master m = 2;
+}
