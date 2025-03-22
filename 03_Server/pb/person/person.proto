@@ -18,7 +18,6 @@ message PersonRes{
   int32 age = 2;
 }
 
-//服务，使用service关键字来声明一个服务，在其中以rpc关键字来声明一个远程调用方法
 service TestService{
   //使用rpc声明时遵循格式为：rpc 方法名称(入参)returns(出参)
   //rpc声明的方法根据出入参是否为流分为四类
