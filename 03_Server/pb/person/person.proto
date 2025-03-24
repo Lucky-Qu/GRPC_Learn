@@ -20,7 +20,7 @@ message PersonRes{
 
 service TestService{
   //使用rpc声明时遵循格式为：rpc 方法名称(入参)returns(出参)
-  //rpc声明的方法根据出入参是否为流分为四类
+  //rpc声明的方法根据出入参是否为流分为以下四类
   //出入参不为流
   rpc TestFunc1(PersonReq)returns(PersonRes);
   //入参为流
