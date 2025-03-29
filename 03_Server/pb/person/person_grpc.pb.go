@@ -32,11 +32,9 @@ const (
 // TestServiceClient is the client API for TestService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 服务，使用service关键字来声明一个服务，在其中以rpc关键字来声明一个远程调用方法
 type TestServiceClient interface {
 	// 使用rpc声明时遵循格式为：rpc 方法名称(入参)returns(出参)
-	// rpc声明的方法根据出入参是否为流分为四类
+	// rpc声明的方法根据出入参是否为流分为以下四类
 	// 出入参不为流
 	TestFunc1(ctx context.Context, in *PersonReq, opts ...grpc.CallOption) (*PersonRes, error)
 	// 入参为流
@@ -113,11 +111,9 @@ type TestService_TestFunc4Client = grpc.BidiStreamingClient[PersonReq, PersonRes
 // TestServiceServer is the server API for TestService service.
 // All implementations must embed UnimplementedTestServiceServer
 // for forward compatibility.
-//
-// 服务，使用service关键字来声明一个服务，在其中以rpc关键字来声明一个远程调用方法
 type TestServiceServer interface {
 	// 使用rpc声明时遵循格式为：rpc 方法名称(入参)returns(出参)
-	// rpc声明的方法根据出入参是否为流分为四类
+	// rpc声明的方法根据出入参是否为流分为以下四类
 	// 出入参不为流
 	TestFunc1(context.Context, *PersonReq) (*PersonRes, error)
 	// 入参为流
