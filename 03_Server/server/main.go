@@ -7,6 +7,8 @@ import (
 	"google.golang.org/grpc"
 	"io"
 	"net"
+	"sync"
+	"time"
 )
 
 type personServer struct {
@@ -38,10 +40,44 @@ func (*personServer) TestFunc2(client grpc.ClientStreamingServer[person.PersonRe
 	}
 	return nil
 }
-func (*personServer) TestFunc3(*person.PersonReq, grpc.ServerStreamingServer[person.PersonRes]) error {
+func (*personServer) TestFunc3(clientReq *person.PersonReq, server grpc.ServerStreamingServer[person.PersonRes]) error {
+	fmt.Println(clientReq)
+	for range 5 {
+		time.Sleep(time.Second)
+		err := server.Send(&person.PersonRes{
+			Name: "wow",
+			Age:  10,
+		})
+		if err != nil {
+			panic(err)
+		}
+	}
 	return nil
 }
-func (*personServer) TestFunc4(grpc.BidiStreamingServer[person.PersonReq, person.PersonRes]) error {
+func (*personServer) TestFunc4(serverAndClient grpc.BidiStreamingServer[person.PersonReq, person.PersonRes]) error {
+	s := sync.WaitGroup{}
+	s.Add(2)
+	go func() {
+		for {
+			req, _ := serverAndClient.Recv()
+			fmt.Println(req)
+			if req == nil {
+				break
+			}
+		}
+		s.Done()
+	}()
+	go func() {
+		for range 3 {
+			time.Sleep(2)
+			serverAndClient.Send(&person.PersonRes{
+				Name: "here",
+				Age:  1,
+			})
+		}
+		s.Done()
+	}()
+	s.Wait()
 	return nil
 }
 
